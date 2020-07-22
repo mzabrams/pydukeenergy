@@ -154,7 +154,9 @@ class DukeEnergy(object):
         Collecting the meter info to build meter objects.
         """
         if self._login():
-            response = self.session.get(METER_ACTIVE_URL, timeout=10)
+            headers = LOGIN_HEADERS.copy()
+            headers.update(USER_AGENT)
+            response = self.session.get(METER_ACTIVE_URL, headers=headers, timeout=10)
             _LOGGER.debug(str(response.text))
             soup = BeautifulSoup(response.text, "html.parser")
             meter_data = json.loads(soup.find("duke-dropdown", {"id": "usageAnalysisMeter"})["items"])
